@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shpl-service
+spec:
+  selector:
+    app: shpl-app
+  ports:
+  - protocol: "TCP"
+    port: 9000
+    targetPort: 9000
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shpl-app
+spec:
+  selector:
+    matchLabels:
+      app: shpl-app
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: shpl-app
+    spec:
+      containers:
+      - name: shpl-app
+        image: pkyad/shpl:latest
+        imagePullPolicy: Always
+        command: ['/bin/bash', 'k8run.sh']
+        ports:
+        - containerPort: 9000
+        env:
+        - name: POSTGRES_PASSWORD
+          value: root
+        - name: POSTGRES_USER
+          value: root
+        - name: POSTGRES_DATABASE_IP
+          value: 10.96.5.160

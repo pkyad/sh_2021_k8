@@ -1,0 +1,7 @@
+- hosts: webservers
+  
+  tasks:
+    - name: apply
+      command: kubectl apply -f /home/pradeep/Music/shpl-k8/k8.yaml
+    - name: reload
+      command: kubectl rollout restart deployment.apps/hello-python
